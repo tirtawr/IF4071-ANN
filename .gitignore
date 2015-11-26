@@ -1,13 +1,21 @@
+#ant specific
+MyNN/dist/
+MyNN/build/
+
+#netbeans specific
+MyNN/core
+MyNN/nbproject/*
+!nbproject/project.properties
+!nbproject/project.xml
+
+#java specific
 *.class
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-/MyNN/nbproject/private/
+#general swap/backup files
+*.so
+*.log
+*.out
+*~
+*.swp
+*.DS_Store
+*.lock
