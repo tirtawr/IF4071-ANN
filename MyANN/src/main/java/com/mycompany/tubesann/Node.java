@@ -14,6 +14,9 @@ public class Node {
     private Node[] next;
     private Node[] prev;
     protected double output;
+    private double[] prevWeight;
+    private double[] deltaPrevWeight;
+    
     
     //0 untuk tidak ada, 1 untuk sign, 2 untuk sigmoid
     private int activationFunction = 0;
@@ -25,8 +28,6 @@ public class Node {
     public double getOutput() {
         return output;
     }
-    
-    private double[] prevWeight;
     
     public Node(){
     
@@ -42,15 +43,18 @@ public class Node {
             Node[] nextNode = new Node[1];
             nextNode[0] = this;
             prev[i].setNext(nextNode);
+            
         }
     }
 
     public void setPrevWeight(double[] prevWeight) {
         this.prevWeight = prevWeight;
+        deltaPrevWeight = new double[prevWeight.length];
+        for(int i= 0;i<deltaPrevWeight.length;i++){
+            deltaPrevWeight[i] = 0;
+        }
     }
 
-    
-    
     public double calculate(){
         double ret = 0;
         
@@ -71,10 +75,23 @@ public class Node {
     
     public void updateWeight(double desiredOutput){
         calculate();
-        for(int i=0;i<prev.length;i++){
-            prevWeight[i] = prevWeight[i] + MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output;
-            
+        for(int i=0;i<prev.length;i++){ 
+            prevWeight[i] += MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output;
         }
         
+    }
+    
+    public void batchGradient(double desiredOutput){
+        calculate();
+        for(int i=0;i<prev.length;i++){ 
+            deltaPrevWeight[i] += MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output;
+        }
+    }
+    
+    public void updateWeightBatch(){
+        for(int i=0;i<prev.length;i++){ 
+            prevWeight[i] += deltaPrevWeight[i];
+            deltaPrevWeight[i] = 0;
+        }
     }
 }

@@ -26,12 +26,38 @@ public class MyANN implements Classifier{
 
     public void PerceptronTrainingRule(double[][] input,double[] desiredOutput){
         //epoch
+        finalNode.setActivationFunction(1);
         for(int i=0;i<input.length;i++){
             //iterasi
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
-                finalNode.updateWeight(desiredOutput[i]);
             }
+            finalNode.updateWeight(desiredOutput[i]);
+        }
+    }
+    
+    public void batchGradientDescent(double[][] input,double[] desiredOutput){
+        finalNode.setActivationFunction(0);
+        //epoch
+        for(int i=0;i<input.length;i++){
+            //iterasi
+            for(int j=0;j<input[i].length;j++){
+                startNode[j].setInput(input[i][j]);
+            }
+            finalNode.batchGradient(desiredOutput[i]);
+        }
+        finalNode.updateWeightBatch();
+    }
+    
+    public void deltaRule(double[][] input,double[] desiredOutput){
+        finalNode.setActivationFunction(0);
+        //epoch
+        for(int i=0;i<input.length;i++){
+            //iterasi
+            for(int j=0;j<input[i].length;j++){
+                startNode[j].setInput(input[i][j]);
+            }
+            finalNode.updateWeight(desiredOutput[i]);
         }
     }
     

@@ -8,6 +8,7 @@ import weka.classifiers.Classifier;
  */
 public class App 
 {
+    @SuppressWarnings("empty-statement")
     public static void main( String[] args )
     {
         MyANN myann = new MyANN();
@@ -30,5 +31,9 @@ public class App
         myann.setFinalNode(finalNode);
         myann.setStartNode(input);
         
+        double[][] testInput = {{1,0,1}};
+        double[] testDesiredOutput = {0};
+        
+        myann.PerceptronTrainingRule(testInput, testDesiredOutput);
     }
 }
