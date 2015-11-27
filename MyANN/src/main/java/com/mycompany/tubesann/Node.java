@@ -14,13 +14,19 @@ public class Node {
     private Node[] next;
     private Node[] prev;
     protected double output;
+    
+    //0 untuk tidak ada, 1 untuk sign, 2 untuk sigmoid
+    private int activationFunction = 0;
+
+    public void setActivationFunction(int activationFunction) {
+        this.activationFunction = activationFunction;
+    }
 
     public double getOutput() {
         return output;
     }
     
     private double[] prevWeight;
-    private ActivasionFunction actFunc;
     
     public Node(){
     
@@ -43,9 +49,6 @@ public class Node {
         this.prevWeight = prevWeight;
     }
 
-    public void setActFunc(ActivasionFunction actFunc) {
-        this.actFunc = actFunc;
-    }
     
     
     public double calculate(){
@@ -56,8 +59,14 @@ public class Node {
             ret+=prev[i].calculate() * prevWeight[i];
         }
         //dikenakan activasion function
-        output = actFunc.calculate(ret);
-        return output;
+        if(activationFunction == 1){
+            ret = ActivationFunction.signFunction(ret);
+        }
+        else if(activationFunction == 2){
+            ret = ActivationFunction.sigmoidFunction(ret);
+        }
+        output = ret;
+        return ret;
     }
     
     public void updateWeight(double desiredOutput){

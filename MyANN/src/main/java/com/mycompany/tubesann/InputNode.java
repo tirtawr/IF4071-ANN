@@ -28,7 +28,6 @@ public class InputNode extends Node{
 
     @Override
     public double calculate() {
-        
         return input;
     }
     

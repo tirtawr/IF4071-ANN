@@ -10,6 +10,16 @@ package com.mycompany.tubesann;
  *
  * @author Riady
  */
-public interface ActivasionFunction {
-    public abstract double calculate(double input);
+public class ActivationFunction {
+    public static double signFunction(double input){
+        if(input>0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+    public static double sigmoidFunction(double input){
+        return (1/( 1 + Math.pow(Math.E,(-1*input))));
+    }
 }

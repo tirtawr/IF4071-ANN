@@ -15,14 +15,14 @@ public class App
         
         for(int i=0;i<input.length;i++){
             input[i] = new InputNode();
-            input[i].setActFunc(new SignFunction());
+            input[i].setActivationFunction(1);
         }
         
         
         double[] weight = {0.5,0.2,0.8};
         
         Node finalNode = new Node();
-        finalNode.setActFunc(new SignFunction());
+        finalNode.setActivationFunction(1);
         finalNode.setPrev(input);
         finalNode.setPrevWeight(weight);
         MyANN.LEARNINGRATE = 1;
@@ -30,6 +30,5 @@ public class App
         myann.setFinalNode(finalNode);
         myann.setStartNode(input);
         
-        myann.PerceptronTrainingRule(0);
     }
 }

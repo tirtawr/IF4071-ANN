@@ -24,13 +24,15 @@ public class MyANN implements Classifier{
     private Node finalNode;
     private InputNode[] startNode;
 
-    public void PerceptronTrainingRule(double desiredOutput){
-        
-        startNode[0].setInput(1);
-        startNode[1].setInput(0);
-        startNode[2].setInput(1);
-        System.out.println(finalNode.calculate());
-        finalNode.updateWeight(desiredOutput);
+    public void PerceptronTrainingRule(double[][] input,double[] desiredOutput){
+        //epoch
+        for(int i=0;i<input.length;i++){
+            //iterasi
+            for(int j=0;j<input[i].length;j++){
+                startNode[j].setInput(input[i][j]);
+                finalNode.updateWeight(desiredOutput[i]);
+            }
+        }
     }
     
     public void setRule(int rule) {
