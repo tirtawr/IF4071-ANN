@@ -24,9 +24,10 @@ public class MyANN implements Classifier{
     private Node finalNode;
     private InputNode[] startNode;
 
-    public void PerceptronTrainingRule(double[][] input,double[] desiredOutput){
-        //epoch
+    public void perceptronTrainingRule(double[][] input,double[] desiredOutput){
         finalNode.setActivationFunction(1);
+        //epoch
+        
         for(int i=0;i<input.length;i++){
             //iterasi
             for(int j=0;j<input[i].length;j++){
@@ -57,6 +58,19 @@ public class MyANN implements Classifier{
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
             }
+            finalNode.updateWeight(desiredOutput[i]);
+        }
+    }
+    
+    public void backPropagation(double[][] input,double[] desiredOutput){
+        finalNode.setActivationFunction(2);
+        //epoch
+        for(int i=0;i<input.length;i++){
+            //iterasi
+            for(int j=0;j<input[i].length;j++){
+                startNode[j].setInput(input[i][j]);
+            }
+            
             finalNode.updateWeight(desiredOutput[i]);
         }
     }

@@ -16,7 +16,7 @@ public class ActivationFunction {
             return 1;
         }
         else{
-            return 0;
+            return -1;
         }
     }
     public static double sigmoidFunction(double input){

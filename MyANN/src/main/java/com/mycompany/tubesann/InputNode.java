@@ -22,9 +22,10 @@ public class InputNode extends Node{
         output = input;
     }
 
-    public InputNode(double input) {
-        this.input = input;
+    public InputNode(int id) {
+        super(id);
     }
+
 
     @Override
     public double calculate() {
