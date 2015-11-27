@@ -65,13 +65,13 @@ public class MyANN implements Classifier{
     public void backPropagation(double[][] input,double[] desiredOutput){
         finalNode.setActivationFunction(2);
         //epoch
+        
         for(int i=0;i<input.length;i++){
             //iterasi
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
             }
-            
-            finalNode.updateWeight(desiredOutput[i]);
+            finalNode.updateWeightBackPropFinalNode(desiredOutput[i]);
         }
     }
     

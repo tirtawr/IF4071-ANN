@@ -36,6 +36,12 @@ public class Node {
     //0 untuk tidak ada, 1 untuk sign, 2 untuk sigmoid
     private int activationFunction = 0;
 
+    public int getId() {
+        return id;
+    }
+
+    
+    
     public void setActivationFunction(int activationFunction) {
         this.activationFunction = activationFunction;
     }
@@ -116,27 +122,34 @@ public class Node {
     }
     
     public void updateWeightBackPropFinalNode(double desiredOutput){
+        calculate();
         queue = new LinkedList<Node>();
-        error = output*(1-output)*(desiredOutput-output);
+        error = MyANN.LEARNINGRATE*output*(1-output)*(desiredOutput-output);
         
         for(int i=0;i<prev.length;i++){
+            System.out.println("id="+prev[i].id+"  "+prevWeight.get(prev[i].id));
             prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+error*prev[i].output);
+            System.out.println(prevWeight.get(prev[i].id));
+            System.out.println();
             queue.add(prev[i]);
         }
         while(!queue.isEmpty()){
-            queue.remove().updateWeightBackProp(desiredOutput);
+            queue.remove().updateWeightBackProp();
         }
     }
     
-    public void updateWeightBackProp(double desiredOutput){
+    public void updateWeightBackProp(){
         double tempError = 0;
         for(int i=0;i<next.length;i++){
             tempError+=next[i].error*next[i].prevWeight.get(id);
         }
-        error = output * (1-output) * tempError;
-        for(int i=0;i<prev.length;i++){
-            prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+error*prev[i].output);
-            queue.add(prev[i]);
+        error = MyANN.LEARNINGRATE*output * (1-output) * tempError;
+        if(prev!=null){
+            for(int i=0;i<prev.length;i++){
+                prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+error*prev[i].output);
+                queue.add(prev[i]);
+            }
         }
+        
     }
 }
