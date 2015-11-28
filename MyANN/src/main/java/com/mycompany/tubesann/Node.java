@@ -22,6 +22,8 @@ public class Node {
     private double[] nextWeight;
     private HashMap<Integer,Double> prevWeight;
     private HashMap<Integer,Double> deltaPrevWeight;
+    private HashMap<Integer,Double> prevDeltaPrevWeight;
+    private HashMap<Integer,Double> prevDeltaPrevWeightEpoch;
     private static Queue<Node> queue;
 
     public void setPrevWeight(HashMap<Integer, Double> prevWeight) {
@@ -29,6 +31,10 @@ public class Node {
         deltaPrevWeight = new HashMap<Integer,Double>();
         for ( Integer key : prevWeight.keySet() ) {
             deltaPrevWeight.put(key, new Double(0));
+        }
+        prevDeltaPrevWeight = new HashMap<Integer,Double>();
+        for ( Integer key : prevWeight.keySet() ) {
+            prevDeltaPrevWeight.put(key, new Double(0));
         }
     }
     private double error;
@@ -97,8 +103,8 @@ public class Node {
         calculate();
         for(int i=0;i<prev.length;i++){ 
             System.out.println(prevWeight.get(prev[i].id));
-            prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output);
-            
+            deltaPrevWeight.put(prev[i].id,(MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output) + MyANN.MOMENTUM*deltaPrevWeight.get(prev[i].id));
+            prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+deltaPrevWeight.get(prev[i].id));
             System.out.println(prevWeight.get(prev[i].id));
             System.out.println("");
         }
@@ -108,13 +114,16 @@ public class Node {
     public void batchGradient(double desiredOutput){
         calculate();
         for(int i=0;i<prev.length;i++){ 
-            deltaPrevWeight.put(prev[i].id,deltaPrevWeight.get(prev[i].id)+MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output);    }
+            deltaPrevWeight.put(prev[i].id,deltaPrevWeight.get(prev[i].id)+MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output);    
+        }
     }
     
     public void updateWeightBatch(){
         for(int i=0;i<prev.length;i++){ 
             System.out.println(prevWeight.get(prev[i].id));
-            prevWeight.put(prev[i].id, prevWeight.get(prev[i].id) + deltaPrevWeight.get(prev[i].id));
+            
+            prevWeight.put(prev[i].id, prevWeight.get(prev[i].id) + deltaPrevWeight.get(prev[i].id)+prevDeltaPrevWeight.get(prev[i].id)*MyANN.MOMENTUM);
+            prevDeltaPrevWeight.put(prev[i].id,+ deltaPrevWeight.get(prev[i].id));
             deltaPrevWeight.put(prev[i].id, new Double(0));
             System.out.println(prevWeight.get(prev[i].id));
             System.out.println("");

@@ -12,7 +12,7 @@ public class App
     @SuppressWarnings("empty-statement")
     public static void main( String[] args )
     {
-        /*MyANN myann = new MyANN();
+        MyANN myann = new MyANN();
         InputNode[] input= new InputNode[5];
         
         for(int i=0;i<input.length;i++){
@@ -34,6 +34,7 @@ public class App
         finalNode.setPrev(input);
         finalNode.setPrevWeight(temp);
         MyANN.LEARNINGRATE = 0.1;
+        MyANN.MOMENTUM = 0;
         
         myann.setFinalNode(finalNode);
         myann.setStartNode(input);
@@ -43,7 +44,8 @@ public class App
         
         myann.deltaRule(testInput, testDesiredOutput);
         myann.deltaRule(testInput, testDesiredOutput);
-        */
+        
+        /*
         MyANN myann = new MyANN();
         InputNode[] input= new InputNode[5];
         
@@ -96,6 +98,6 @@ public class App
         double[] testDesiredOutput = {1,1,1,-1,-1,-1};
         
         myann.backPropagation(testInput, testDesiredOutput);
-        
+        */ 
      }
 }
