@@ -134,7 +134,6 @@ public class MyANN implements Classifier{
             }
         }
         finalNode.setPrevWeight(weight);
-        MyANN.LEARNINGRATE = 0.1;
     }
 
     public void setWeight(double[] weight) {
