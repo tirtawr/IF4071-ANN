@@ -147,7 +147,6 @@ public class MyANN implements Classifier{
     }
 
     public void buildClassifier(Instances train) throws Exception {
-        train.setClassIndex(train.numAttributes()-1);
 
         initiate(train);
 
@@ -191,8 +190,11 @@ public class MyANN implements Classifier{
         }
     }
 
-    public double classifyInstance(Instance instnc) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double classifyInstance(Instance instance) throws Exception {
+        for (int i=0;i<instance.numAttributes();i++) {
+            startNode[i].setInput(instance.value(i));
+        }
+        return finalNode.calculate();
     }
 
     public double[] distributionForInstance(Instance instnc) throws Exception {

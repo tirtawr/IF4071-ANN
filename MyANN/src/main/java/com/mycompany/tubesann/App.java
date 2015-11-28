@@ -1,10 +1,11 @@
 package com.mycompany.tubesann;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
+
+import sun.security.jca.GetInstance;
 import weka.classifiers.Classifier;
+import weka.core.Instance;
 import weka.core.Instances;
 
 /**
@@ -16,11 +17,15 @@ public class App
     @SuppressWarnings("empty-statement")
     public static void main( String[] args ) throws Exception {
 
-        String filepath = "data/weather.nominal.arff";
+        String fileTrain = "data/iris.arff";
+        String fileUnlabeled = "data/iris.unlabeled.arff";
 
-        FileReader trainreader = new FileReader(filepath);
+        FileReader trainReader = new FileReader(fileTrain);
+        FileReader unlabelledReader = new FileReader(fileUnlabeled);
 
-        Instances train = new Instances(trainreader);
+        Instances train = new Instances(trainReader);
+        train.setClassIndex(train.numAttributes()-1);
+        Instances unlabeled = new Instances(unlabelledReader);
         double[] weight = new double[train.numAttributes()];
         for (int i=0;i<weight.length;i++) {
             weight[i] = 0;
@@ -31,6 +36,18 @@ public class App
         //myann.setWeight(weight);
         myann.randomWeight();
         myann.buildClassifier(train);
+
+        //classify
+        unlabeled.setClassIndex(unlabeled.numAttributes() - 1);
+        Instances labeled = new Instances(unlabeled);
+
+        // label instances
+        for (int i = 0; i < unlabeled.numInstances(); i++) {
+            double clsLabel = myann.classifyInstance(unlabeled.instance(i));
+            System.out.println(clsLabel);
+            labeled.instance(i).setClassValue(clsLabel);
+        }
+        System.out.println(labeled.toString());
 
         //myann.deltaRule(testInput, testDesiredOutput);
         /*
