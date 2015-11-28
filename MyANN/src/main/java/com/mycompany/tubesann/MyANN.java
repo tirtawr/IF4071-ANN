@@ -20,7 +20,8 @@ import weka.core.Instances;
 public class MyANN implements Classifier{
     // 1 PTR, 2 batch, 3 delta
     private int rule;
-    public static double LEARNINGRATE;
+    public static double LEARNINGRATE = 1;
+    public static double MOMENTUM = 0;
     private Node finalNode;
     private InputNode[] startNode;
 
