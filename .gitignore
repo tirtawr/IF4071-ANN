@@ -19,3 +19,7 @@ MyNN/nbproject/*
 *.swp
 *.DS_Store
 *.lock
+
+#intellij
+MyANN/.idea
+MyANN/*.iml
