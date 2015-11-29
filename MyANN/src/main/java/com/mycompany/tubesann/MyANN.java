@@ -27,7 +27,7 @@ public class MyANN implements Classifier{
     private int rule;
     public static double LEARNINGRATE = 1;
     public static double MOMENTUM = 0;
-    private Node finalNode;
+    private Node[] finalNode;
     private InputNode[] startNode;
     private double squareError = 0;
     private Double deltaMSE = null;
@@ -35,8 +35,11 @@ public class MyANN implements Classifier{
     private HashMap<Integer,Double> weight = new HashMap<Integer,Double>();
     private boolean isWeightRandom = false;
 
-    public void perceptronTrainingRule(double[][] input,double[] desiredOutput){
-        finalNode.setActivationFunction(1);
+    public void perceptronTrainingRule(double[][] input,double[][] desiredOutput){
+        for(int i=0;i<finalNode.length;i++){
+            finalNode[i].setActivationFunction(1);
+        }
+        
         //epoch
         double error = 0;
         for(int i=0;i<input.length;i++){
@@ -44,14 +47,19 @@ public class MyANN implements Classifier{
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
             }
-            finalNode.updateWeight(desiredOutput[i]);
-            error += (desiredOutput[i]-finalNode.getOutput())*(desiredOutput[i]-finalNode.getOutput());
+            for(int j=0;j<finalNode.length;j++){
+                finalNode[j].updateWeight(desiredOutput[i][j]);
+                error += (desiredOutput[i][j]-finalNode[j].getOutput())*(desiredOutput[i][j]-finalNode[j].getOutput());
+            }
         }
         squareError = 0.5 * error;
     }
 
-    public void batchGradientDescent(double[][] input,double[] desiredOutput){
-        finalNode.setActivationFunction(0);
+    public void batchGradientDescent(double[][] input,double[][] desiredOutput){
+        
+        for(int i=0;i<finalNode.length;i++){
+            finalNode[i].setActivationFunction(0);
+        }
         //epoch
         double error = 0;
         for(int i=0;i<input.length;i++){
@@ -59,15 +67,21 @@ public class MyANN implements Classifier{
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
             }
-            finalNode.batchGradient(desiredOutput[i]);
-            error += (desiredOutput[i]-finalNode.getOutput())*(desiredOutput[i]-finalNode.getOutput());
+            for(int j=0;j<finalNode.length;j++){
+                finalNode[j].batchGradient(desiredOutput[i][j]);
+                error += (desiredOutput[i][j]-finalNode[j].getOutput())*(desiredOutput[i][j]-finalNode[j].getOutput());
+            }
         }
         squareError = 0.5 * error;
-        finalNode.updateWeightBatch();
+        for(int i=0;i<finalNode.length;i++){
+            finalNode[i].updateWeightBatch();
+        }
     }
 
-    public void deltaRule(double[][] input,double[] desiredOutput){
-        finalNode.setActivationFunction(0);
+    public void deltaRule(double[][] input,double[][] desiredOutput){
+        for(int i=0;i<finalNode.length;i++){
+            finalNode[i].setActivationFunction(0);
+        }
         //epoch
         double error = 0;
         for(int i=0;i<input.length;i++){
@@ -75,14 +89,18 @@ public class MyANN implements Classifier{
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
             }
-            finalNode.updateWeight(desiredOutput[i]);
-            error += (desiredOutput[i]-finalNode.getOutput())*(desiredOutput[i]-finalNode.getOutput());
+            for(int j=0;j<finalNode.length;j++){
+                finalNode[j].updateWeight(desiredOutput[i][j]);
+                error += (desiredOutput[i][j]-finalNode[j].getOutput())*(desiredOutput[i][j]-finalNode[j].getOutput());
+            }
         }
         squareError = 0.5 * error;
     }
 
     public void backPropagation(double[][] input,double[] desiredOutput){
-        finalNode.setActivationFunction(2);
+        for(int i=0;i<finalNode.length;i++){
+            finalNode[i].setActivationFunction(2);
+        }
         //epoch
 
         for(int i=0;i<input.length;i++){
@@ -90,7 +108,10 @@ public class MyANN implements Classifier{
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
             }
-            finalNode.updateWeightBackPropFinalNode(desiredOutput[i]);
+            for(int j=0;j<finalNode.length;j++){
+                finalNode[j].updateWeightBackPropFinalNode(desiredOutput[i]);
+            }
+            
         }
     }
 
@@ -99,7 +120,7 @@ public class MyANN implements Classifier{
     }
 
 
-    public void setFinalNode(Node finalNode) {
+    public void setFinalNode(Node[] finalNode) {
         this.finalNode = finalNode;
     }
 
