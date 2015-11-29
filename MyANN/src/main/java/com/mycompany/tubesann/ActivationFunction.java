@@ -6,11 +6,15 @@
 
 package com.mycompany.tubesann;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Riady
  */
-public class ActivationFunction {
+public class ActivationFunction implements Serializable {
+
+    private static final long serialVersionUID = 0;
     public static double signFunction(double input){
         if(input>0){
             return 1;

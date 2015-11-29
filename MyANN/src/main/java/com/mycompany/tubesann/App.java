@@ -2,9 +2,11 @@ package com.mycompany.tubesann;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Random;
 
 import sun.security.jca.GetInstance;
 import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -12,8 +14,9 @@ import weka.core.Instances;
  * Hello world!
  *
  */
-public class App
-{
+public class App implements Serializable{
+
+    private static final long serialVersionUID = 0;
     @SuppressWarnings("empty-statement")
     public static void main( String[] args ) throws Exception {
 
@@ -53,6 +56,14 @@ public class App
             labeled.instance(i).setClassValue(clsLabel);
         }
         System.out.println(labeled.toString());
+
+        Evaluation eval = new Evaluation(train);
+        eval.crossValidateModel(myann, train,
+                10, new Random(1));
+        System.out
+                .println(eval.toSummaryString("=== 10-fold cross validation ===\n", false));
+        System.out.println(eval.toClassDetailsString());
+        System.out.println(eval.toMatrixString());
 
         //myann.deltaRule(testInput, testDesiredOutput);
         /*
