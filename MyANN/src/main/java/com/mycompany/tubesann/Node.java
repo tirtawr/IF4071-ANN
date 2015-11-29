@@ -101,6 +101,7 @@ public class Node {
     
     public void updateWeight(double desiredOutput){
         calculate();
+        System.out.println("desired "+desiredOutput);
         for(int i=0;i<prev.length;i++){ 
             System.out.println(prevWeight.get(prev[i].id));
             deltaPrevWeight.put(prev[i].id,(MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output) + MyANN.MOMENTUM*deltaPrevWeight.get(prev[i].id));
