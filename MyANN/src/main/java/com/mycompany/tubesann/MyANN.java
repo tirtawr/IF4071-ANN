@@ -191,10 +191,21 @@ public class MyANN implements Classifier{
         for(int i=0;i<nHiddenLayer;i++){
             for(int j=0;j<nHiddenLayer;j++){
                 hiddenLayer[i][j] = new Node(currentId);
+                if(i==0){
+                    hiddenLayer[i][j].setPrev(startNode);
+                    hiddenLayer[i][j].setPrevWeight((HashMap<Integer,Double>)weight.clone());
+                }
+                else{
+                    hiddenLayer[i][j].setPrev(hiddenLayer[i-1]);
+                    hiddenLayer[i][j].setPrevWeight((HashMap<Integer,Double>)weight.clone());
+                }
+                hiddenLayer[i][j].setActivationFunction(2);
                 currentId++;
             }
         }
-        
+        for(int i=0;i<finalNode.length;i++){
+           finalNode[i].setPrev(hiddenLayer[hiddenLayer.length-1]);
+        }
     }
 
     public void setWeight(double[] weight) {
