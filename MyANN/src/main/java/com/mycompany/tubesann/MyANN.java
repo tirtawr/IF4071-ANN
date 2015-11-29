@@ -54,6 +54,8 @@ public class MyANN implements Classifier{
             }
             for(int j=0;j<finalNode.length;j++){
                 finalNode[j].updateWeight(desiredOutput[i][j]);
+                System.out.println("output= "+j+" "+finalNode[j].getOutput());
+                
                 error += (desiredOutput[i][j]-finalNode[j].getOutput())*(desiredOutput[i][j]-finalNode[j].getOutput());
             }
         }
