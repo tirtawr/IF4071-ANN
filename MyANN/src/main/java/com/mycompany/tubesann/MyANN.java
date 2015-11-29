@@ -176,10 +176,12 @@ public class MyANN implements Classifier{
 
         finalNode = new Node[train.numClasses()];
         for (int i=0;i<train.numClasses();i++) {
-            finalNode[i] = new Node(train.numAttributes());
+            finalNode[i] = new Node(i+startNode.length);
             finalNode[i].setActivationFunction(1);
             finalNode[i].setPrev(startNode);
-            finalNode[i].setPrevWeight(weight);
+            HashMap<Integer,Double> tempWeight = new HashMap<Integer,Double>();
+            tempWeight = (HashMap<Integer,Double>)weight.clone();
+            finalNode[i].setPrevWeight(tempWeight);
         }
     }
     
@@ -224,7 +226,7 @@ public class MyANN implements Classifier{
                 System.out.println("Desired "+i+j+" "+testDesiredOutput[i][j]);
             }
             //testInput[i][0] = 0;
-            for(int j = 0; j<train.numAttributes(); j++)
+            for(int j = 0; j<train.numAttributes()-1; j++)
             {
                 testInput[i][j] = train.instance(i).value(j);
             }
@@ -262,7 +264,6 @@ public class MyANN implements Classifier{
     public double classifyInstance(Instance instance) throws Exception {
         double result = 0;
         for (int i=0;i<instance.numAttributes()-1;i++) {
-            System.out.println(instance.value(i));
             startNode[i].setInput(instance.value(i));
         }
         List<Double> output = new ArrayList<Double>();
