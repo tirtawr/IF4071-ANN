@@ -102,22 +102,24 @@ public class MyANN implements Classifier{
         squareError = 0.5 * error;
     }
 
-    public void backPropagation(double[][] input,double[] desiredOutput){
+    public void backPropagation(double[][] input,double[][] desiredOutput){
         for(int i=0;i<finalNode.length;i++){
             finalNode[i].setActivationFunction(2);
         }
         //epoch
-
+        double error = 0;
         for(int i=0;i<input.length;i++){
             //iterasi
             for(int j=0;j<input[i].length;j++){
                 startNode[j].setInput(input[i][j]);
             }
             for(int j=0;j<finalNode.length;j++){
-                finalNode[j].updateWeightBackPropFinalNode(desiredOutput[i]);
+                finalNode[j].updateWeightBackPropFinalNode(desiredOutput[i][j]);
+                error += (desiredOutput[i][j]-finalNode[j].getOutput())*(desiredOutput[i][j]-finalNode[j].getOutput());
             }
             
         }
+        squareError = 0.5 * error;
     }
 
     public void setRule(int rule) {
