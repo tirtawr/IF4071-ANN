@@ -14,6 +14,7 @@ import weka.filters.Filter;
 import weka.filters.supervised.attribute.NominalToBinary;
 import weka.filters.unsupervised.attribute.Normalize;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -22,7 +23,10 @@ import java.util.*;
  */
 
 
-public class MyANN implements Classifier{
+public class MyANN extends Classifier implements Serializable{
+
+    private static final long serialVersionUID = 0;
+
     // 1 PTR, 2 batch, 3 delta
     public static int PERCEPTRON_TRAINING_RULE = 1;
     public static int BATCH_GRADIENT_DESCENT = 2;
@@ -289,11 +293,21 @@ public class MyANN implements Classifier{
     }
 
     public double[] distributionForInstance(Instance instnc) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return super.distributionForInstance(instnc);
     }
 
     public Capabilities getCapabilities() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Capabilities result = super.getCapabilities();
+        result.disableAll();
+        result.enable(Capabilities.Capability.NOMINAL_ATTRIBUTES);
+        result.enable(Capabilities.Capability.NUMERIC_ATTRIBUTES);
+        result.enable(Capabilities.Capability.DATE_ATTRIBUTES);
+        result.enable(Capabilities.Capability.MISSING_VALUES);
+        result.enable(Capabilities.Capability.NOMINAL_CLASS);
+        result.enable(Capabilities.Capability.NUMERIC_CLASS);
+        result.enable(Capabilities.Capability.DATE_CLASS);
+        result.enable(Capabilities.Capability.MISSING_CLASS_VALUES);
+        return result;
     }
 
 }

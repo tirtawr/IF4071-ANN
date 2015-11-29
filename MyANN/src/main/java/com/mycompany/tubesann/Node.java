@@ -6,6 +6,7 @@
 
 package com.mycompany.tubesann;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -14,7 +15,9 @@ import java.util.Queue;
  *
  * @author Riady
  */
-public class Node {
+public class Node implements Serializable {
+
+    private static final long serialVersionUID = 0;
     private int id;
     private Node[] next;
     private Node[] prev;
