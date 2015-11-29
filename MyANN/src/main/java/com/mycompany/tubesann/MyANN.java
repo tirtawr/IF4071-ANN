@@ -54,6 +54,8 @@ public class MyANN implements Classifier{
             }
             for(int j=0;j<finalNode.length;j++){
                 finalNode[j].updateWeight(desiredOutput[i][j]);
+                System.out.println("output= "+j+" "+finalNode[j].getOutput());
+                
                 error += (desiredOutput[i][j]-finalNode[j].getOutput())*(desiredOutput[i][j]-finalNode[j].getOutput());
             }
         }
@@ -181,6 +183,18 @@ public class MyANN implements Classifier{
             tempWeight = (HashMap<Integer,Double>)weight.clone();
             finalNode[i].setPrevWeight(tempWeight);
         }
+    }
+    
+    public void setHiddenLayer(int nHiddenLayer,int nNode){
+        Node[][] hiddenLayer = new Node[nHiddenLayer][nNode];
+        int currentId = startNode.length;
+        for(int i=0;i<nHiddenLayer;i++){
+            for(int j=0;j<nHiddenLayer;j++){
+                hiddenLayer[i][j] = new Node(currentId);
+                currentId++;
+            }
+        }
+        
     }
 
     public void setWeight(double[] weight) {
