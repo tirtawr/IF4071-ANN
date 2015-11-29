@@ -10,8 +10,11 @@ import weka.classifiers.Classifier;
 import weka.core.Capabilities;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.supervised.attribute.NominalToBinary;
+import weka.filters.unsupervised.attribute.Normalize;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  *
@@ -34,6 +37,8 @@ public class MyANN implements Classifier{
     private Integer maxIteration = null;
     private HashMap<Integer,Double> weight = new HashMap<Integer,Double>();
     private boolean isWeightRandom = false;
+    private final Normalize normalizeFilter = new Normalize();
+    private final NominalToBinary nominalToBinaryFilter = new NominalToBinary();
 
     public void perceptronTrainingRule(double[][] input,double[][] desiredOutput){
         for(int i=0;i<finalNode.length;i++){
@@ -138,7 +143,20 @@ public class MyANN implements Classifier{
         this.maxIteration = maxIteration;
     }
 
-    private void initiate(Instances train) {
+    public static Instances setNominalToBinary(Instances instances) {
+        NominalToBinary ntb = new NominalToBinary();
+        Instances newInstances = null;
+        try {
+            ntb.setInputFormat(instances);
+            newInstances = new Instances(Filter.useFilter(instances, ntb));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return newInstances;
+    }
+
+    private void initiate(Instances train) throws Exception {
         startNode= new InputNode[train.numAttributes()];
 
         for(int i=0;i<startNode.length;i++){
@@ -146,9 +164,6 @@ public class MyANN implements Classifier{
             startNode[i].setActivationFunction(1);
         }
 
-        finalNode = new Node(train.numAttributes());
-        finalNode.setActivationFunction(1);
-        finalNode.setPrev(startNode);
         if (isWeightRandom) {
             double rangeMin = 0.0;
             double rangeMax = 1.0;
@@ -156,7 +171,14 @@ public class MyANN implements Classifier{
                 this.weight.put(i, new Double(Math.random() * (rangeMax - rangeMin) + rangeMin));
             }
         }
-        finalNode.setPrevWeight(weight);
+
+        finalNode = new Node[train.numClasses()];
+        for (int i=0;i<train.numClasses();i++) {
+            finalNode[i] = new Node(train.numAttributes());
+            finalNode[i].setActivationFunction(1);
+            finalNode[i].setPrev(startNode);
+            finalNode[i].setPrevWeight(weight);
+        }
     }
     
     public void setHiddenLayer(int nHiddenLayer,int nNode){
@@ -186,10 +208,19 @@ public class MyANN implements Classifier{
         initiate(train);
 
         double[][] testInput = new double[train.numInstances()][train.numAttributes()];
-        double[] testDesiredOutput = new double[train.numInstances()];
+        double[][] testDesiredOutput = new double[train.numInstances()][train.numClasses()];
         for(int i=0; i<train.numInstances(); i++)
         {
-            testDesiredOutput[i] = train.instance(i).classValue();
+            for (int j=0;j<train.numClasses();j++) {
+                if (j == (int) train.instance(i).classValue()) {
+                    testDesiredOutput[i][j] = 1;
+                } else if (rule == 1) {
+                    testDesiredOutput[i][j] = -1;
+                } else {
+                    testDesiredOutput[i][j] = 0;
+                }
+                System.out.println("Desired "+i+j+" "+testDesiredOutput[i][j]);
+            }
             for(int j = 0; j<train.numAttributes()-1; j++)
             {
                 testInput[i][j] = train.instance(i).value(j);
@@ -226,10 +257,30 @@ public class MyANN implements Classifier{
     }
 
     public double classifyInstance(Instance instance) throws Exception {
+        double result = 0;
         for (int i=0;i<instance.numAttributes();i++) {
             startNode[i].setInput(instance.value(i));
         }
-        return finalNode.calculate();
+        List<Double> output = new ArrayList<Double>();
+        for (int i=0;i<finalNode.length;i++) {
+            output.add(finalNode[i].calculate());
+            System.out.println("Output "+i+" "+output.get(i));
+        }
+        if (rule == 1) {
+            boolean found = false;
+            int i = 0;
+            while (!found && i < output.size()) {
+                if (output.get(i) == 1) {
+                    result = (double) i;
+                    found = true;
+                }
+                i++;
+            }
+        } else {
+            double max = Collections.max(output);
+            result = (double) output.indexOf(max);
+        }
+        return result;
     }
 
     public double[] distributionForInstance(Instance instnc) throws Exception {
