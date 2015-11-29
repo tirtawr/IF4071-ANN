@@ -158,6 +158,18 @@ public class MyANN implements Classifier{
         }
         finalNode.setPrevWeight(weight);
     }
+    
+    public void setHiddenLayer(int nHiddenLayer,int nNode){
+        Node[][] hiddenLayer = new Node[nHiddenLayer][nNode];
+        int currentId = startNode.length;
+        for(int i=0;i<nHiddenLayer;i++){
+            for(int j=0;j<nHiddenLayer;j++){
+                hiddenLayer[i][j] = new Node(currentId);
+                currentId++;
+            }
+        }
+        
+    }
 
     public void setWeight(double[] weight) {
         for (int i=0;i<weight.length;i++) {
