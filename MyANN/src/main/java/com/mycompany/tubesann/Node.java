@@ -88,6 +88,7 @@ public class Node {
         for(int i=0;i<prev.length;i++){
             ret+=prev[i].calculate() * prevWeight.get(prev[i].id);
         }
+        System.out.println("ret "+ret);
         //dikenakan activasion function
         if(activationFunction == 1){
             ret = ActivationFunction.signFunction(ret);

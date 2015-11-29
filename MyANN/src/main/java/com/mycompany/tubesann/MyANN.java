@@ -223,7 +223,8 @@ public class MyANN implements Classifier{
                 }
                 System.out.println("Desired "+i+j+" "+testDesiredOutput[i][j]);
             }
-            for(int j = 0; j<train.numAttributes()-1; j++)
+            //testInput[i][0] = 0;
+            for(int j = 0; j<train.numAttributes(); j++)
             {
                 testInput[i][j] = train.instance(i).value(j);
             }
