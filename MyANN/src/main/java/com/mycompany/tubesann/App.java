@@ -29,16 +29,17 @@ public class App
         train = MyANN.setNominalToBinary(train);
 
         Instances unlabeled = new Instances(unlabelledReader);
-        double[] weight = new double[train.numAttributes()];
+        double[] weight = new double[train.numAttributes()+1];
         for (int i=0;i<weight.length;i++) {
             weight[i] = 0;
         }
         MyANN myann = new MyANN();
         myann.setRule(MyANN.PERCEPTRON_TRAINING_RULE);
+        MyANN.LEARNINGRATE = 0.1;
         //myann.setDeltaMSE(0.001);
         myann.setMaxIteration(10);
-        myann.setWeight(weight);
-        //myann.randomWeight();
+        //myann.setWeight(weight);
+        myann.randomWeight();
         myann.buildClassifier(train);
 
         //classify
