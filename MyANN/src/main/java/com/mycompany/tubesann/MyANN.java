@@ -261,7 +261,8 @@ public class MyANN implements Classifier{
 
     public double classifyInstance(Instance instance) throws Exception {
         double result = 0;
-        for (int i=0;i<instance.numAttributes();i++) {
+        for (int i=0;i<instance.numAttributes()-1;i++) {
+            System.out.println(instance.value(i));
             startNode[i].setInput(instance.value(i));
         }
         List<Double> output = new ArrayList<Double>();
