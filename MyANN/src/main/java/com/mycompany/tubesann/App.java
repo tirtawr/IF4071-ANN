@@ -37,10 +37,10 @@ public class App implements Serializable{
             weight[i] = 0;
         }
         MyANN myann = new MyANN();
-        myann.setRule(MyANN.PERCEPTRON_TRAINING_RULE);
-        MyANN.LEARNINGRATE = 0.1;
+        myann.setRule(4);
+        MyANN.LEARNINGRATE = 0.4;
         //myann.setDeltaMSE(0.001);
-        myann.setMaxIteration(10);
+        myann.setMaxIteration(1500);
         //myann.setWeight(weight);
         myann.randomWeight();
         myann.buildClassifier(train);
@@ -66,7 +66,7 @@ public class App implements Serializable{
         System.out.println(eval.toMatrixString());
 
         //myann.deltaRule(testInput, testDesiredOutput);
-        /*
+/*        
         MyANN myann = new MyANN();
         InputNode[] input= new InputNode[5];
 
@@ -111,14 +111,15 @@ public class App implements Serializable{
         finalNode.setPrev(hiddenNode);
         finalNode.setPrevWeight(tempp);
         MyANN.LEARNINGRATE = 0.1;
-
-        myann.setFinalNode(finalNode);
+        Node[] finalNodee = new Node[1];
+        finalNodee[0] = finalNode;
+        myann.setFinalNode(finalNodee);
         myann.setStartNode(input);
 
         double[][] testInput = {{1,5.1,3.5,1.4,0.2},{1,4.9,3,1.4,0.2},{1,4.7,3.2,1.3,0.2},{1,7,3.2,4.7,1.4},{1,6.4,3.2,4.5,1.5},{1,6.9,3.1,4.9,1.5}};
-        double[] testDesiredOutput = {1,1,1,-1,-1,-1};
+        double[][] testDesiredOutput = {{1},{1},{1},{-1},{-1},{-1}};
 
         myann.backPropagation(testInput, testDesiredOutput);
-        */
+  */      
      }
 }

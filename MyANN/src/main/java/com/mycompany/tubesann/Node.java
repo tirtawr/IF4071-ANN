@@ -88,10 +88,14 @@ public class Node implements Serializable {
         double ret = 0;
         
         //jumlahin semua prev beserta weightnya
+ 
         for(int i=0;i<prev.length;i++){
+//            System.out.println("id "+id);
+//            System.out.println("prev id "+prev[i].id);
+//            System.out.println(prevWeight.get(prev[i].id));
             ret+=prev[i].calculate() * prevWeight.get(prev[i].id);
         }
-        System.out.println("ret "+ret);
+//        System.out.println("ret "+ret);
         //dikenakan activasion function
         if(activationFunction == 1){
             ret = ActivationFunction.signFunction(ret);
@@ -105,13 +109,13 @@ public class Node implements Serializable {
     
     public void updateWeight(double desiredOutput){
         calculate();
-        System.out.println("desired "+desiredOutput);
+        //System.out.println("desired "+desiredOutput);
         for(int i=0;i<prev.length;i++){ 
-            System.out.println(prevWeight.get(prev[i].id));
+         //   System.out.println(prevWeight.get(prev[i].id));
             deltaPrevWeight.put(prev[i].id,(MyANN.LEARNINGRATE*(desiredOutput - output)*prev[i].output) + MyANN.MOMENTUM*deltaPrevWeight.get(prev[i].id));
             prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+deltaPrevWeight.get(prev[i].id));
-            System.out.println(prevWeight.get(prev[i].id));
-            System.out.println("");
+//            System.out.println(prevWeight.get(prev[i].id));
+//            System.out.println("");
         }
         
     }
@@ -125,13 +129,13 @@ public class Node implements Serializable {
     
     public void updateWeightBatch(){
         for(int i=0;i<prev.length;i++){ 
-            System.out.println(prevWeight.get(prev[i].id));
+         //   System.out.println(prevWeight.get(prev[i].id));
             
             prevWeight.put(prev[i].id, prevWeight.get(prev[i].id) + deltaPrevWeight.get(prev[i].id)+prevDeltaPrevWeight.get(prev[i].id)*MyANN.MOMENTUM);
             prevDeltaPrevWeight.put(prev[i].id,+ deltaPrevWeight.get(prev[i].id));
             deltaPrevWeight.put(prev[i].id, new Double(0));
-            System.out.println(prevWeight.get(prev[i].id));
-            System.out.println("");
+//            System.out.println(prevWeight.get(prev[i].id));
+//            System.out.println("");
         }
     }
     
@@ -139,12 +143,12 @@ public class Node implements Serializable {
         calculate();
         queue = new LinkedList<Node>();
         error = MyANN.LEARNINGRATE*output*(1-output)*(desiredOutput-output);
-        
+        //System.out.println("error = "+error);
         for(int i=0;i<prev.length;i++){
-            System.out.println("id="+prev[i].id+"  "+prevWeight.get(prev[i].id));
+         //   System.out.println("id="+prev[i].id+"  "+prevWeight.get(prev[i].id));
             prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+error*prev[i].output);
-            System.out.println(prevWeight.get(prev[i].id));
-            System.out.println();
+//            System.out.println(prevWeight.get(prev[i].id));
+//            System.out.println();
             queue.add(prev[i]);
         }
         while(!queue.isEmpty()){
@@ -157,9 +161,12 @@ public class Node implements Serializable {
         for(int i=0;i<next.length;i++){
             tempError+=next[i].error*next[i].prevWeight.get(id);
         }
+        
         error = MyANN.LEARNINGRATE*output * (1-output) * tempError;
+        
         if(prev!=null){
             for(int i=0;i<prev.length;i++){
+              //  System.out.println("weight = "+prevWeight.get(prev[i].id));
                 prevWeight.put(prev[i].id,prevWeight.get(prev[i].id)+error*prev[i].output);
                 queue.add(prev[i]);
             }

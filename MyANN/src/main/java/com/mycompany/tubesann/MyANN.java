@@ -58,7 +58,7 @@ public class MyANN extends Classifier implements Serializable{
             }
             for(int j=0;j<finalNode.length;j++){
                 finalNode[j].updateWeight(desiredOutput[i][j]);
-                System.out.println("output= "+j+" "+finalNode[j].getOutput());
+               // System.out.println("output= "+j+" "+finalNode[j].getOutput());
                 
                 error += (desiredOutput[i][j]-finalNode[j].getOutput())*(desiredOutput[i][j]-finalNode[j].getOutput());
             }
@@ -166,8 +166,14 @@ public class MyANN extends Classifier implements Serializable{
         startNode= new InputNode[train.numAttributes()];
 
         for(int i=0;i<startNode.length;i++){
+            System.out.println("i "+i);
             startNode[i] = new InputNode(i);
-            startNode[i].setActivationFunction(1);
+            if(rule == 1){
+                startNode[i].setActivationFunction(1);
+            }
+            else if(rule == 4){
+                startNode[i].setActivationFunction(2);
+            }
         }
 
         if (isWeightRandom) {
@@ -180,35 +186,60 @@ public class MyANN extends Classifier implements Serializable{
 
         finalNode = new Node[train.numClasses()];
         for (int i=0;i<train.numClasses();i++) {
+            //System.out.println("i "+(i+startNode.length));
             finalNode[i] = new Node(i+startNode.length);
-            finalNode[i].setActivationFunction(1);
+            if(rule == 1){
+                finalNode[i].setActivationFunction(1);
+            }
+            else if(rule == 4){
+                finalNode[i].setActivationFunction(2);
+            }
             finalNode[i].setPrev(startNode);
             HashMap<Integer,Double> tempWeight = new HashMap<Integer,Double>();
             tempWeight = (HashMap<Integer,Double>)weight.clone();
             finalNode[i].setPrevWeight(tempWeight);
         }
+        if(rule==4){
+            setHiddenLayer(1,3);
+        }
     }
     
     public void setHiddenLayer(int nHiddenLayer,int nNode){
-        Node[][] hiddenLayer = new Node[nHiddenLayer][nNode];
-        int currentId = startNode.length;
+        Node[][] hiddenLayer = new Node[nHiddenLayer][];
+        int currentId = startNode.length+finalNode.length;
         for(int i=0;i<nHiddenLayer;i++){
-            for(int j=0;j<nHiddenLayer;j++){
+            hiddenLayer[i] = new Node[nNode];
+            for(int j=0;j<nNode;j++){
+               // System.out.println("i "+currentId);
                 hiddenLayer[i][j] = new Node(currentId);
                 if(i==0){
                     hiddenLayer[i][j].setPrev(startNode);
-                    hiddenLayer[i][j].setPrevWeight((HashMap<Integer,Double>)weight.clone());
+                    HashMap<Integer,Double> tempWeight = new HashMap<Integer,Double>(); 
+                    for(int k=0;k<startNode.length;k++){
+                        tempWeight.put(startNode[k].getId(), new Double(0));
+                    }
+                    hiddenLayer[i][j].setPrevWeight(tempWeight);
                 }
                 else{
                     hiddenLayer[i][j].setPrev(hiddenLayer[i-1]);
-                    hiddenLayer[i][j].setPrevWeight((HashMap<Integer,Double>)weight.clone());
+                    HashMap<Integer,Double> tempWeight = new HashMap<Integer,Double>(); 
+                    for(int k=0;k<hiddenLayer[i-1].length;k++){
+                        tempWeight.put(hiddenLayer[i-1][k].getId(), new Double(0));
+                    }
+                    hiddenLayer[i][j].setPrevWeight(tempWeight);
                 }
                 hiddenLayer[i][j].setActivationFunction(2);
                 currentId++;
             }
         }
         for(int i=0;i<finalNode.length;i++){
-           finalNode[i].setPrev(hiddenLayer[hiddenLayer.length-1]);
+            
+           finalNode[i].setPrev(hiddenLayer[nHiddenLayer-1]);
+           HashMap<Integer,Double> tempWeight = new HashMap<Integer,Double>(); 
+            for(int j=0;j<hiddenLayer[nHiddenLayer-1].length;j++){
+                tempWeight.put(hiddenLayer[nHiddenLayer-1][j].getId(), new Double(0));
+            }
+            finalNode[i].setPrevWeight(tempWeight);
         }
     }
 
@@ -238,7 +269,7 @@ public class MyANN extends Classifier implements Serializable{
                 } else {
                     testDesiredOutput[i][j] = 0;
                 }
-                System.out.println("Desired "+i+j+" "+testDesiredOutput[i][j]);
+                //System.out.println("Desired "+i+j+" "+testDesiredOutput[i][j]);
             }
             //testInput[i][0] = 0;
             for(int j = 0; j<train.numAttributes()-1; j++)
@@ -258,6 +289,9 @@ public class MyANN extends Classifier implements Serializable{
                     break;
                 case 3:
                     deltaRule(testInput, testDesiredOutput);
+                    break;
+                case 4:
+                    backPropagation(testInput, testDesiredOutput);
                     break;
                 default:
                     break;
@@ -284,7 +318,7 @@ public class MyANN extends Classifier implements Serializable{
         List<Double> output = new ArrayList<Double>();
         for (int i=0;i<finalNode.length;i++) {
             output.add(finalNode[i].calculate());
-            System.out.println("Output "+i+" "+output.get(i));
+          //  System.out.println("Output "+i+" "+output.get(i));
         }
         if (rule == 1) {
             boolean found = false;
@@ -297,8 +331,17 @@ public class MyANN extends Classifier implements Serializable{
                 i++;
             }
         } else {
-            double max = Collections.max(output);
-            result = (double) output.indexOf(max);
+            int imax = 0;
+            //System.out.println("output i= "+0+" output= "+output.get(0));
+            for(int i=1;i<output.size();i++){
+                //System.out.println("output i= "+i+" output= "+output.get(i));
+                if(output.get(i)>output.get(imax)){
+                    imax = i;
+                }
+            }
+            result = (double) imax;
+            //double max = Collections.max(output);
+            //result = (double) output.indexOf(max);
         }
         return result;
     }
